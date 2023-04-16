@@ -20,9 +20,8 @@ const getData = async (product) => {
 
         return productData;
     } catch (err) {
-        console.log('error log')
         console.error(err);
-        return `Failed to retrieve data in the ${product} endpoint}`
+        throw new Error(`Failed to retrieve data in the ${product} endpoint}`)
     }
 };
 
