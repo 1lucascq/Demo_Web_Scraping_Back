@@ -7,7 +7,7 @@ const getData = async (product) => {
             args: [
                 '--disable-setuid-sandbox',
                 '--no-sandbox',
-                '--no-single-process',
+                '--single-process',
                 '--no-zygote'
             ],
             executablePath: process.env.NODE_ENV === 'production'
