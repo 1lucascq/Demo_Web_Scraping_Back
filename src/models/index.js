@@ -30,8 +30,7 @@ const getData = async (product) => {
                 const name = card.querySelector('[data-testid="product-card::name"]').textContent;
                 const price = card.querySelector('[data-testid="product-card::price"]').textContent;
                 const image = card.querySelector('[data-testid="product-card::image"] img').src;
-
-                return {name, price, image}
+                return { name, price, image, store: 'Buscapé' }
             })
         });
 
