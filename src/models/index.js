@@ -24,7 +24,7 @@ const getData = async (product) => {
         console.log(page.getDefaultTimeout)
         console.log('---------------------------> timeout defined')
 
-        await page.goto(`https://www.buscape.com.br${product}`, { waitUntil: 'load' });
+        await page.goto(`https://www.buscape.com.br${product}`);
         console.log('---------------------------> after page.goto')
 
         await page.setDefaultNavigationTimeout(180000)
