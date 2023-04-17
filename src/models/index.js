@@ -7,10 +7,10 @@ const getData = async (product) => {
         console.log('---------------------------> in try')
         const browser = await puppeteer.launch({
             args: [
-                '--disable-setuid-sandbox',
-                '--no-sandbox',
-                '--single-process',
-                '--no-zygote'
+                // '--disable-setuid-sandbox',
+                // '--no-sandbox',
+                // '--single-process',
+                // '--no-zygote'
             ],
             executablePath: process.env.NODE_ENV === 'production'
                 ? process.env.PUPPETEER_EXECUTABLE_PATH
@@ -24,12 +24,20 @@ const getData = async (product) => {
         console.log(page.getDefaultTimeout)
         console.log('---------------------------> timeout defined')
 
-        await page.goto(`https://www.buscape.com.br${product}`);
-        console.log('---------------------------> after page.goto')
+        try {
+            await page.goto(`https://www.buscape.com.br${product}`, {
+                waitUntil: 'domcontentloaded',
+                timeout: 100000
+            });
+        } catch (error) {
+            console.log('---------------------------> after page.goto')
+            console.log(process.env.PUPPETEER_EXECUTABLE_PATH)
+            console.log(error)
+        }
 
         await page.setDefaultNavigationTimeout(180000)
         console.log('---------------------------> setting timeout')
-        console.log(page.getDefaultTimeout)
+        console.log(page.getDefaultTimeout())
         console.log('---------------------------> timeout defined')
 
         const productData = await page.$$eval('[data-testid="product-card"]', (productCard) => {
