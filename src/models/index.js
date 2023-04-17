@@ -19,7 +19,7 @@ const getData = async (product) => {
         console.log('---------------------------> after puppeteer launch')
         const page = await browser.newPage();
 
-        await page.setDefaultNavigationTimeout(150000)
+        page.setDefaultNavigationTimeout(150000)
         console.log('---------------------------> setting timeout')
         console.log(page.getDefaultTimeout)
         console.log('---------------------------> timeout defined')
@@ -35,7 +35,7 @@ const getData = async (product) => {
             console.log(error)
         }
 
-        await page.setDefaultNavigationTimeout(180000)
+        page.setDefaultTimeout(180000)
         console.log('---------------------------> setting timeout')
         console.log(page.getDefaultTimeout())
         console.log('---------------------------> timeout defined')
