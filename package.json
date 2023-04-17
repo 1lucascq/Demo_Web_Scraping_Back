@@ -7,13 +7,13 @@
     "node": "18"
   },
   "scripts": {
-    "start": "npm run install-chromium && node index.js",
-    "install-chromium": "node -e \"try { require('puppeteer-core') } catch(e) { require('child_process').execSync('npm install puppeteer-core') }\""
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "puppeteer": "^19.9.0"
   },
