@@ -25,7 +25,7 @@ const getData = async (product) => {
             timeout: 0
         });
 
-        const productData = await page.$$eval('[data-testid="product-card"]', (productCard) => {
+        const productData = await page.$eval('[data-testid="product-card"]', (productCard) => {
             return productCard.map((card) => {
                 const name = card.querySelector('[data-testid="product-card::name"]').textContent;
                 const price = card.querySelector('[data-testid="product-card::price"]').textContent;
