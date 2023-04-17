@@ -6,6 +6,6 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 WORKDIR /usr/src
 
 COPY package*.json ./
-RUN npm ci
+RUN NODE_ENV=development npm i
 COPY . .
 CMD [ "node", "index.js" ]
