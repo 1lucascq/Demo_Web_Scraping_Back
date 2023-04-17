@@ -7,7 +7,7 @@
     "node": "18"
   },
   "scripts": {
-    "start": "node src/app/index.js"
+    "start": "node src/index.js"
   },
   "keywords": [],
   "author": "",
