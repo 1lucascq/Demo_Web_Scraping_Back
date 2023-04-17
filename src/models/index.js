@@ -15,6 +15,9 @@ const getData = async (product) => {
                 : puppeteer.executablePath(),
         });
         const page = await browser.newPage();
+
+        page.setDefaultNavigationTimeout(0);
+
         await page.goto(`https://www.buscape.com.br${product}`);
 
         const productData = await page.$$eval('[data-testid="product-card"]', (productCard) => {
