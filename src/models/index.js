@@ -25,14 +25,23 @@ const getData = async (product) => {
             timeout: 0
         });
 
-        const productData = await page.$$eval('[data-testid="product-card"]', (productCard) => {
-            return productCard.map((card) => {
-                const name = card.querySelector('[data-testid="product-card::name"]').textContent;
-                const price = card.querySelector('[data-testid="product-card::price"]').textContent;
-                const image = card.querySelector('[data-testid="product-card::image"] img').src;
+        // NOTE: The code to load ALL data in the page is commented to reduce loading time in server (the app was deployed in a very lazy free plan server in Render.com).
+        // const productData = await page.$$eval('[data-testid="product-card"]', (productCard) => {
+        //     return productCard.map((card) => {
+        //         const name = card.querySelector('[data-testid="product-card::name"]').textContent;
+        //         const price = card.querySelector('[data-testid="product-card::price"]').textContent;
+        //         const image = card.querySelector('[data-testid="product-card::image"] img').src;
 
-                return {name, price, image}
-            })
+        //         return {name, price, image}
+        //     })
+        // });
+
+        const productData = await page.$eval('[data-testid="product-card"]', (productCard) => {
+            const name = productCard.querySelector('[data-testid="product-card::name"]').textContent;
+            const price = productCard.querySelector('[data-testid="product-card::price"]').textContent;
+            const image = productCard.querySelector('[data-testid="product-card::image"] img').src;
+
+            return {name, price, image}
         });
 
         await browser.close();
