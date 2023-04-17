@@ -7,8 +7,8 @@
     "node": "18"
   },
   "scripts": {
-    "start": "node ./src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run install-chromium && node index.js",
+    "install-chromium": "node -e \"try { require('puppeteer-core') } catch(e) { require('child_process').execSync('npm install puppeteer-core') }\""
   },
   "keywords": [],
   "author": "",
