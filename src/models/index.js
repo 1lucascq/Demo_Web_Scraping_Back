@@ -16,9 +16,9 @@ const getData = async (product) => {
         });
         const page = await browser.newPage();
 
-        page.setDefaultNavigationTimeout(0);
 
-        await page.goto(`https://www.buscape.com.br${product}`);
+        await page.goto(`https://www.buscape.com.br${product}`, {waitUntil: 'load', timeout: 0});
+        page.setDefaultNavigationTimeout(0);
 
         const productData = await page.$$eval('[data-testid="product-card"]', (productCard) => {
             return productCard.map((card) => {
