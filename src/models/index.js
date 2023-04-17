@@ -19,11 +19,15 @@ const getData = async (product) => {
         console.log('---------------------------> after puppeteer launch')
         const page = await browser.newPage();
 
+        await page.setDefaultNavigationTimeout(150000)
+        console.log('---------------------------> setting timeout')
+        console.log(page.getDefaultTimeout)
+        console.log('---------------------------> timeout defined')
 
-        await page.goto(`https://www.buscape.com.br${product}`, { waitUntil: 'load' });
+        await page.goto(`https://www.buscape.com.br${product}`);
         console.log('---------------------------> after page.goto')
 
-        await page.setDefaultNavigationTimeout(150000)
+        await page.setDefaultNavigationTimeout(180000)
         console.log('---------------------------> setting timeout')
         console.log(page.getDefaultTimeout)
         console.log('---------------------------> timeout defined')
