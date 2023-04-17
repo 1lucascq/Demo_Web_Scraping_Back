@@ -17,9 +17,10 @@ const getData = async (product) => {
         const page = await browser.newPage();
 
 
-        await page.goto(`https://www.buscape.com.br${product}`, {waitUntil: 'load', timeout: 90000});
+        await page.goto(`https://www.buscape.com.br${product}`, {waitUntil: 'load'});
+        await page.setDefaultNavigationTimeout(150000)
 
-        const productData = await page.$$eval('[data-testid="product-card"]', (productCard) => {
+    const productData = await page.$$eval('[data-testid="product-card"]', (productCard) => {
             return productCard.map((card) => {
                 const name = card.querySelector('[data-testid="product-card::name"]').textContent;
                 const price = card.querySelector('[data-testid="product-card::price"]').textContent;
