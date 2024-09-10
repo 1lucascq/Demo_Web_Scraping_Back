@@ -8,14 +8,24 @@ const getData = async (product) => {
 	try {
 		const browser = await puppeteer.launch({
 			headless: true,
-			args: ['--disable-setuid-sandbox', '--no-sandbox', '--no-single-process', '--no-zygote', '--enable-webgl', '--use-gl=desktop'],
-			executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
+			args: [
+				'--disable-setuid-sandbox',
+				'--no-sandbox',
+				'--no-single-process',
+				'--no-zygote',
+				'--enable-webgl',
+				'--use-gl=desktop',
+				'--disable-dev-shm-usage',
+				'--disable-gpu',
+			],
 		});
 
 		const page = await browser.newPage();
 
-		await page.setViewport({ width: 1024, height: 768 });
-
+		await page.setUserAgent(
+			'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+		);
+		await page.setViewport({ width: 1280, height: 800 });
 		await page.setRequestInterception(true);
 		page.on('request', (req) => {
 			const resourceType = req.resourceType();
@@ -26,12 +36,7 @@ const getData = async (product) => {
 			}
 		});
 
-		await page.setUserAgent(
-			'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-		);
-
 		await page.goto(URL, { waitUntil: 'domcontentloaded' });
-
 		await page.waitForSelector('[data-testid="product-card"]', { timeout: 15000 });
 
 		const productData = await page.$$eval('[data-testid="product-card::card"]', (productCards) => {
