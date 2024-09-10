@@ -1,46 +1,57 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 require('dotenv').config();
+puppeteer.use(StealthPlugin());
 
 const getData = async (product) => {
-    try {
-        const browser = await puppeteer.launch({
-            args: [
-                '--disable-setuid-sandbox',
-                '--no-sandbox',
-                '--no-single-process',
-                '--no-zygote'
-            ],
-            executablePath: process.env.NODE_ENV === 'production'
-                ? process.env.PUPPETEER_EXECUTABLE_PATH
-                : puppeteer.executablePath(),
-        });
+	const URL = `https://www.buscape.com.br${product}`;
+	try {
+		const browser = await puppeteer.launch({
+			headless: true,
+			args: ['--disable-setuid-sandbox', '--no-sandbox', '--no-single-process', '--no-zygote', '--enable-webgl', '--use-gl=desktop'],
+			executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
+		});
 
-        const page = await browser.newPage();
+		const page = await browser.newPage();
 
-        page.setDefaultNavigationTimeout(0)
-        page.setDefaultTimeout(0)
+		await page.setViewport({ width: 1024, height: 768 });
 
-        await page.goto(`https://www.buscape.com.br${product}`, {
-            waitUntil: "networkidle2",
-            timeout: 0
-        });
+		await page.setRequestInterception(true);
+		page.on('request', (req) => {
+			const resourceType = req.resourceType();
+			if (['stylesheet', 'font', 'image'].includes(resourceType)) {
+				req.abort();
+			} else {
+				req.continue();
+			}
+		});
 
-        const productData = await page.$$eval('[data-testid="product-card"]', (productCard) => {
-            return productCard.slice(0, 6).map((card) => {
-                const name = card.querySelector('[data-testid="product-card::name"]').textContent;
-                const price = card.querySelector('[data-testid="product-card::price"]').textContent;
-                const image = card.querySelector('[data-testid="product-card::image"] img').src;
-                return { name, price, image, store: 'Buscapé' }
-            })
-        });
+		await page.setUserAgent(
+			'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+		);
 
-        await browser.close();
+		await page.goto(URL, { waitUntil: 'domcontentloaded' });
 
-        return productData;
-    } catch (err) {
-        console.error(err);
-        throw new Error(`Failed to retrieve data in the ${product} endpoint}`)
-    }
+		await page.waitForSelector('[data-testid="product-card"]', { timeout: 15000 });
+
+		const productData = await page.$$eval('[data-testid="product-card::card"]', (productCards) => {
+			return productCards.slice(0, 10).map((card) => {
+				const name = card.querySelector('[data-testid="product-card::name"]')?.textContent || 'No name';
+				const price = card.querySelector('[data-testid="product-card::price"]')?.textContent || 'No price';
+				const image = card.querySelector('[data-testid="product-card::image"] img')?.src || 'No image';
+
+				return { name, price, image, store: 'Buscapé' };
+			});
+		});
+
+		await browser.close();
+
+		return productData;
+	} catch (err) {
+		console.error(`Error scraping product data from: ${product}`);
+		console.error(err);
+		throw new Error(`Failed to retrieve data from the ${product} endpoint`);
+	}
 };
 
 module.exports = { getData };
