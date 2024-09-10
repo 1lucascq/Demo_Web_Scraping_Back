@@ -1,6 +1,5 @@
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-require('dotenv').config();
 puppeteer.use(StealthPlugin());
 
 const getData = async (product) => {
