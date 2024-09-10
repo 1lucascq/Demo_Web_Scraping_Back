@@ -1,11 +1,23 @@
-FROM ghcr.io/puppeteer/puppeteer:19.9.0
+# Use an official Node.js runtime as a parent image
+FROM node:18
 
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
-
+# Set the working directory in the container
 WORKDIR /usr/src/app
 
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
-RUN npm ci
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code to the working directory
 COPY . .
-CMD [ "npm", "start" ]
+
+# Expose the port the app runs on
+EXPOSE 3002
+
+# Define environment variables
+ENV PORT=3002
+
+# Start the application
+CMD ["npm", "start"]

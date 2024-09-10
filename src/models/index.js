@@ -2,6 +2,10 @@ const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
 
+const stealth = StealthPlugin();
+stealth.enabledEvasions.clear();
+puppeteer.use(stealth);
+
 const getData = async (product) => {
 	const URL = `https://www.buscape.com.br${product}`;
 	try {
