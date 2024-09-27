@@ -1,1 +1,1 @@
-back com nodejs e puppeteer --link vercel::
+back com nodejs e puppeteer --link supabase::
